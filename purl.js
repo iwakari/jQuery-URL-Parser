@@ -3,6 +3,7 @@
  * Developed and maintanined by Mark Perkins, mark@allmarkedup.com
  * Source repository: https://github.com/allmarkedup/jQuery-URL-Parser
  * Licensed under an MIT-style license. See https://github.com/allmarkedup/jQuery-URL-Parser/blob/master/LICENSE for details.
+ * updated: May 1, 2013 to provide both get and set functionality smelnikoff@mac.com
  */ 
 
 ;(function(factory) {
@@ -208,27 +209,39 @@
 		url = url || window.location.toString();
 	
 		return {
-			
+			//provide both get and set functionality ala second argument
 			data : parseUri(url, strictMode),
-			
 			// get various attributes from the URI
-			attr : function( attr ) {
+			attr : function( attr, a ) {
 				attr = aliases[attr] || attr;
+				if(arguments.length == 2 && typeof attr !== 'undefined') {
+					this.data.attr[attr] = a;
+				}
 				return typeof attr !== 'undefined' ? this.data.attr[attr] : this.data.attr;
 			},
 			
 			// return query string parameters
-			param : function( param ) {
+			param : function( param, p ) {
+				if(arguments.length == 2 && typeof param !== 'undefined') {
+					this.data.param.query[param] = p;
+				}
 				return typeof param !== 'undefined' ? this.data.param.query[param] : this.data.param.query;
 			},
 			
 			// return fragment parameters
-			fparam : function( param ) {
+			fparam : function( param, p ) {
+				if(arguments.length == 2 && typeof param !== 'undefined') {
+					this.data.param.fragment[param] = p;
+				}
 				return typeof param !== 'undefined' ? this.data.param.fragment[param] : this.data.param.fragment;
 			},
-			
+
 			// return path segments
-			segment : function( seg ) {
+			segment : function( seg, s ) {
+				if(arguments.length == 2 && typeof seg !== 'undefined') {
+					seg = seg < 0 ? this.data.seg.path.length + seg : seg - 1;
+					this.data.seg.path[seg] = s;
+				}
 				if ( typeof seg === 'undefined' ) {
 					return this.data.seg.path;
 				} else {
@@ -238,7 +251,11 @@
 			},
 			
 			// return fragment segments
-			fsegment : function( seg ) {
+			fsegment : function( seg, s ) {
+				if(arguments.length == 2 && typeof seg !== 'undefined') {
+					seg = seg < 0 ? this.data.seg.fragment.length + seg : seg - 1;
+					this.data.seg.fragment[seg] = s;
+				}
 				if ( typeof seg === 'undefined' ) {
 					return this.data.seg.fragment;                    
 				} else {
